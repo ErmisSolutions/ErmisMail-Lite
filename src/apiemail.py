@@ -14,6 +14,6 @@ class Emailer():
         self._username = username
         self._password = password
 
-    def sendMail(self):
+    def sendMail(self, to:str, frm:str, message:str):
         with smtplib.SMTP_SSL(self._server, self._port, ssl.create_default_context()) as smtp:
             smtp.login(self._username, self._password)
