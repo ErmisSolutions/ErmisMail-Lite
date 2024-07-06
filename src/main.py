@@ -1,9 +1,10 @@
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import find_dotenv, load_dotenv
 from src.apiemail import Emailer
 from src.apiconfig import APIConfig
+from typing_extensions import Annotated
 
 load_dotenv(find_dotenv())
 
@@ -21,8 +22,9 @@ async def root(request: Request):
     return {"message": f'{request.headers["host"]}'}
 
 @app.post("/email/{key}")
-async def email(request: Request):
+async def email(key, fromEmail: Annotated[str, Form()], messageBody: Annotated[str, Form()]):
     try:
-        pass
+        toEmail = apiSettings.getEmail(key)
+        emailer.sendMail(toEmail, fromEmail, messageBody)
     except Exception as ex:
         return {"message: " f'{ex.message}'}

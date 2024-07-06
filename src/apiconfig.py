@@ -7,13 +7,21 @@ class APIConfig:
     _emailSettings = []
 
     def __init__(self) -> None:
-        if Path(self._config_path).is_file():
-            with open(self._config_path) as config:
-                json_data = json.load(config)
-                self._emailSettings = json_data["emailSettings"]
-        else: 
+        if not Path(self._config_path).is_file():
             with open(self._config_path, 'w') as config:
                 config.write('{"emailSettings": [{ "apikey": "", "email": "" }]}')
     
-    def getEmail(self):
-        pass
+    def getEmail(self, key):
+        self.loadConfig()
+        try:
+            for item in self._emailSettings:
+                if key == item["apikey"]:
+                    return item["email"]
+            return None
+        except Exception as ex:
+            return None
+
+    def loadConfig(self):
+        with open(self._config_path) as config:
+            json_data = json.load(config)
+            self._emailSettings = json_data["emailSettings"]
