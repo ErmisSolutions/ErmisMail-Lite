@@ -29,5 +29,6 @@ class Emailer():
                 emailMessage.attach(MIMEText(message, "plain"))
 
                 smtp.sendmail(self._username, to, emailMessage.as_string())
+                return True
         except Exception as ex:
             return ex

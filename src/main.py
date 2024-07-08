@@ -16,6 +16,14 @@ app = FastAPI()
 
 cors = env["CORS"]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors,
+    allow_credentials=True,
+    allow_methods=["POST"],
+    allow_headers=["*"]
+)
+
 @app.get("/")
 async def root(request: Request):
     print(request.client.host)
@@ -25,6 +33,9 @@ async def root(request: Request):
 async def email(key, fromEmail: Annotated[str, Form()], messageBody: Annotated[str, Form()]):
     try:
         toEmail = apiSettings.getEmail(key)
-        emailer.sendMail(toEmail, fromEmail, messageBody)
+        if emailer.sendMail(toEmail, fromEmail, messageBody):
+            return {"message": f"Email sent"}
+        else:
+            return {"message": f"error"}
     except Exception as ex:
         return {"message: " f'{ex.message}'}
