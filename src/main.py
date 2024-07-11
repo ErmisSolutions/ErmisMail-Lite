@@ -12,7 +12,7 @@ apiSettings = APIConfig()
 env = os.environ
 emailer = Emailer(env["EMAIL_HOST"], env["EMAIL_SMTP_PORT"], env["EMAIL_USERNAME"], env["EMAIL_PASSWORD"])
 
-app = FastAPI()
+app = FastAPI(root_path=env["BASE_PATH"])
 
 cors = env["CORS"]
 
@@ -27,7 +27,7 @@ app.add_middleware(
 @app.get("/")
 async def root(request: Request):
     print(request.client.host)
-    return {"message": f'{request.headers["host"]}'}
+    return {"message": f'{request.headers["host"]}', "root_path": request.scope.get("root_path")}
 
 @app.post("/email/{key}")
 async def email(key, fromEmail: Annotated[str, Form()], messageBody: Annotated[str, Form()]):

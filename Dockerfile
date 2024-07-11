@@ -16,7 +16,8 @@ ENV EMAIL_SMTP_PORT="465"
 ENV EMAIL_IMAP_PORT="993"
 ENV EMAIL_USERNAME=""
 ENV EMAIL_PASSWORD=""
-ENV CORS=""
+ENV BASE_PATH="/"
+ENV CORS="*"
 
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
