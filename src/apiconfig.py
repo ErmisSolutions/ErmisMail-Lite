@@ -9,14 +9,14 @@ class APIConfig:
     def __init__(self) -> None:
         if not Path(self._config_path).is_file():
             with open(self._config_path, 'w') as config:
-                config.write('{"emailSettings": [{ "apikey": "", "email": "" }]}')
+                config.write('{"emailSettings": [{ "apikey": "", "email": "", "redirect": "" }]}')
     
-    def getEmail(self, key):
+    def getSettings(self, key):
         self.loadConfig()
         try:
             for item in self._emailSettings:
                 if key == item["apikey"]:
-                    return item["email"]
+                    return (item["email"], item["redirect"])
             return None
         except Exception as ex:
             return None

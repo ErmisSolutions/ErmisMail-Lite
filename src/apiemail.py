@@ -16,17 +16,19 @@ class Emailer():
         self._username = username
         self._password = password
 
-    def sendMail(self, to:str, frm:str, message:str):
+    def sendMail(self, to:str, name:str, fromEmail:str, subject:str, message:str):
         try:
             with smtplib.SMTP_SSL(self._server, self._port, ssl.create_default_context()) as smtp:
                 smtp.login(self._username, self._password)
 
                 emailMessage = MIMEMultipart("alternative")
-                emailMessage["Subject"] = "Hello World"
+                emailMessage["Subject"] = subject
                 emailMessage["From"] = self._username
                 emailMessage["To"] = to
 
-                emailMessage.attach(MIMEText(message, "plain"))
+                finalMessage: str = f"Name: {name}\nEmail: {fromEmail}\nSubject: {subject}\n\n{message}"
+
+                emailMessage.attach(MIMEText(finalMessage, "plain"))
 
                 smtp.sendmail(self._username, to, emailMessage.as_string())
                 return True
